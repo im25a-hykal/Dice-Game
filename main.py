@@ -2,10 +2,10 @@
 
 
 #alle Inputs und Variabeln(anzahl Punkte, Spieler...)
-players = int(input("How many players do you have? "))
 pointbarrier = int(input("What's the point barrier? "))
 dicecount = int(input("How many dice do you have? "))
 
+#loop wo alle players hinzugefügt werden
 
 #Mainfunktion
 #   jeder spieler durchläuft den folgenden loop

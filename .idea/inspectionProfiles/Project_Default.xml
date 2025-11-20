@@ -1,0 +1,28 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="astroid" />
+          <option value="attrs" />
+          <option value="colorama" />
+          <option value="dill" />
+          <option value="exceptiongroup" />
+          <option value="iniconfig" />
+          <option value="isort" />
+          <option value="mccabe" />
+          <option value="packaging" />
+          <option value="platformdirs" />
+          <option value="pluggy" />
+          <option value="Pygments" />
+          <option value="pylint" />
+          <option value="pyparsing" />
+          <option value="pytest" />
+          <option value="tomli" />
+          <option value="tomlkit" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
