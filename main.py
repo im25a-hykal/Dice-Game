@@ -6,16 +6,16 @@ pointbarrier = int(input("What's the point barrier? "))
 dicecount = int(input("How many dice do you have? "))
 counter = 0
 roll = 0
-players = []
+players = {}
 rolls = []
 def playerselection():
     while 'done' not in players:
         player_name = input("What's the player name? ")
-        players.append(player_name)
-    players.pop()
+        players[player_name] = 0
+    players.pop('done')
 
 playerselection()
-print(players)
+print(players.keys())
 
 for player in players:
     decision = input(f'do you want to roll {player}? (y or n) ')
@@ -27,6 +27,7 @@ for player in players:
         counter = 0
         total = sum(rolls)
         print(f'your total is {total} these are your rolls:{rolls}')
+        rolls = []
 
 """
     print: Spieler ... ist am zug
