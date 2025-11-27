@@ -40,10 +40,17 @@ def gameloop():
 
 
     #def bank():
-        #while dicecount > counter:
-            #roll = random.randint(1, 6)
-            #rolls.append(roll)
-            #counter += 1
+        #if bank_in == True:
+
+            #if random.randint (pointbarrier - players[bank]) % (dicecount * 6) > 0:
+                #rollchance = 100
+            #else:
+                #rollchance = (pointbarrier - players[bank]) / (dicecount * 6) * 100
+
+            #while dicecount > counter:
+                #roll = random.randint(1, 6)
+                #rolls.append(roll)
+                #counter += 1
 
 
     for player in players:
