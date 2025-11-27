@@ -102,9 +102,9 @@ def show_game_interface():
     #action buttons
     action_frame = tk.Frame(centre_frame)
     action_frame.pack(pady=20)
-    roll_button = tk.Button(action_frame, text="Roll", command=lambda: roll(), font=('Arial', 12))
+    roll_button = tk.Button(action_frame, text="Roll", command=lambda: roll_function(), font=('Arial', 12))
     roll_button.pack(side=tk.LEFT, padx=10)
-    pass_button = tk.Button(action_frame, text="Pass", command=lambda: show_game_interface(), font=('Arial', 12))
+    pass_button = tk.Button(action_frame, text="Pass", command=lambda: pass_function(), font=('Arial', 12))
     pass_button.pack(side=tk.LEFT, padx=10)
     tk.Button(action_frame, text="Newstart", command=lambda: show_start_interface(), font=('Arial', 12)).pack(side=tk.LEFT, padx=10)
 
@@ -145,10 +145,11 @@ def alert(message, duration_ms=5000):
     alert_window.update_idletasks()
     alert_window.lift()
 
-def roll():
+def roll_function():
 
     global point_barrier, dice_count, current_player_name, roll_value, rolls, index, total, players_final_score, counter
-
+    rolls = []
+    counter = 0
     if roll_button or pass_button:
         roll_button.config(state=tk.DISABLED)
         pass_button.config(state=tk.DISABLED)
@@ -157,13 +158,14 @@ def roll():
         roll = random.randint(1, 6)
         rolls.append(roll)
         counter += 1
-    roll_value = sum(rolls)
-    counter = 0
-    players[current_player_name] += roll_value
-    if players[current_player_name] > point_barrier:
+    roll_value.set(str(sum(rolls)))
+    zusammengezaehlt = sum(rolls)
+    players[current_player_name.get()] += zusammengezaehlt
+
+    if players[current_player_name.get()] > point_barrier:
         lost = True
-        players_final_score[current_player_name] = -1
-        players.pop(current_player_name)
+        players_final_score[current_player_name.get()] = -1
+        players.pop(current_player_name.get())
     else:
         lost = False
 
@@ -172,6 +174,9 @@ def roll():
     else:
         alert(f"Deine aktuellen Punkte: {players[current_player_name]}", 5000)
     root.after(3000, next_player)
+
+def pass_function():
+    pass
 
 
 def next_player():
