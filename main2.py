@@ -1,5 +1,6 @@
 #Spielinstrucktionen
 import random
+from os import supports_dir_fd
 
 
 def welcome():
@@ -22,11 +23,16 @@ roll = 0
 players = {}
 players_final_score = {}
 rolls = []
+bank_in = input("Would you like to play with your bank? (y/n) ") == "y"
+
 def playerselection():
     while 'done' not in players and 'Done' not in players:
         player_name = input("What's the player name?  If you are done type 'done'")
         players[player_name] = 0
     players.popitem()
+    if bank_in:
+        players['bank'] = 0
+
 
 playerselection()
 print(list(players.keys()))
@@ -39,52 +45,84 @@ def gameloop():
 
 
 
-    #def bank():
-        #if bank_in == True:
+    def bank():
+        # falls pointbarrier minus 1 minus player minus x mal dicecount weniger als 1 is, dann immer pass (muss noch programmiert werden)
+        global players
+        global counter
+        global roll
+        global rolls
+        global dicecount
+        if bank_in == True:
+            if (pointbarrier - players[player]) //  (dicecount * 6) > 0:
+                rollchance = 100
+            else:
+                rollchance = (pointbarrier - 1 - players[player]) / (dicecount * 6) * 100
+            print((pointbarrier -1 - players[player]) % (dicecount * 6) > 0)
+            print(rollchance)
+            print(players[player])
 
-            #if random.randint (pointbarrier - players[bank]) % (dicecount * 6) > 0:
-                #rollchance = 100
-            #else:
-                #rollchance = (pointbarrier - players[bank]) / (dicecount * 6) * 100
 
-            #while dicecount > counter:
-                #roll = random.randint(1, 6)
-                #rolls.append(roll)
-                #counter += 1
-
-
-    for player in players:
-        if players[player] >= 0:
-            decision = input(f'do you want to roll {player} (your current points {players[player]})? (y or n) ')
-            if decision == 'y':
+            if random.randint(1 , 100) <= rollchance:
                 while dicecount > counter:
                     roll = random.randint(1, 6)
                     rolls.append(roll)
                     counter += 1
-
                 counter = 0
-                total = sum(rolls)
-                players[player] += total
-
-                if players[player] >= pointbarrier:
-                    lost = ' (you lost)'
-                    players[player] = -1
-                    players_final_score[player] = players[player]
-
-                else:
-                    lost = ''
-
-                print(f'your total is {total} these are your rolls:{rolls}{lost}')
-                rolls = []
-
-            elif decision == 'n':
+            else:
                 players_final_score[player] = players[player]
+                print('bank passed')
+
+            total = sum(rolls)
+            print(rolls)
+            rolls = []
+            players[player] += total
+
+            if players[player] >= pointbarrier:
+                print ('bank lost')
+                players_final_score[player] = -1
+
+
+
+
+
+    for player in players:
+        if players[player] >= 0:
+            if player != 'bank':
+                decision = input(f'do you want to roll {player} (your current points {players[player]}/{pointbarrier})? (y or n) ')
+                if decision == 'y':
+                    while dicecount > counter:
+                        roll = random.randint(1, 1)
+                        rolls.append(roll)
+                        counter += 1
+
+                    counter = 0
+                    total = sum(rolls)
+                    players[player] += total
+
+                    if players[player] >= pointbarrier:
+                        lost = ' (you lost)'
+                        players[player] = -1
+                        players_final_score[player] = players[player]
+
+                    else:
+                        lost = ''
+
+                    print(f'your total is {total} these are your rolls:{rolls}{lost}')
+                    rolls = []
+
+                elif decision == 'n':
+                    players_final_score[player] = players[player]
+            else:
+                bank()
+                if bank_in and len(players) == 1:
+                    players_final_score[player] = players[player]
 
     for player in players_final_score:
         if player in players:
             del players[player]
 while len(players) >= 1:
     gameloop()
+
 
 print(players)
 sorted_players = dict(sorted(players.items(), key=lambda item: item[1], reverse=True))
