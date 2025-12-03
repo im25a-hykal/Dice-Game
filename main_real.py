@@ -66,9 +66,13 @@ def variable_assert(players_input, point_barrier_input, dice_input):
     show_game_interface()
 
 def show_game_interface():
-    global root, score_widgets_frame, current_player_name_var, last_roll_value_var
+    global root, score_widgets_frame, current_player_name, roll_value
     global point_barrier, dice_count
-    global roll_button, pass_button
+    global roll_button, pass_button, index
+    index = 0
+    current_player_name = tk.StringVar(value="")
+    roll_value = tk.StringVar(value="")
+
 
     main_frame = tk.Frame(root)
     main_frame.pack(expand=True, fill=tk.BOTH, padx=10, pady=10)
@@ -119,12 +123,47 @@ def show_game_interface():
     tk.Label(right_frame, text=f"Punkteschranke: {point_barrier}", font="Arial, 16").pack(pady=5)
     tk.Label(right_frame, text=f"Anzahl Würfel: {dice_count}", font="Arial, 16").pack(pady=5)
 
+    update_ui()
+
 def clear_window():
     for widget in root.winfo_children():
         widget.destroy()
 
 def update_ui():
-    pass
+    global players, index, roll_value
+    player_names = list(players.keys())
+    active_players = [name for name, score in players.items() if score >= 0]
+
+    if  len(active_players) <= 1:
+        alert(f"Player: {active_players[0]} has won!", 5000)
+
+    else:
+        if index >= len(player_names):
+            index = 0
+        else:
+            current_name = player_names[index]
+            current_player_name.set(current_name)
+
+    update_scoreboard()
+
+
+
+
+
+def update_scoreboard():
+    global players, score_widgets_frame
+
+    #Alte scoreboardeinträge löschen
+    if score_widgets_frame:
+        for widget in score_widgets_frame.winfo_children():
+            widget.destroy()
+
+    #auflistung der namen
+    for name in players:
+        score = players[name]
+        score_text = str(score)
+        tk.Label(score_widgets_frame, text=f"{name}: {score_text}").pack(anchor='w', padx=10, pady=2)
+
 
 def alert(message, duration_ms=5000):
 
@@ -163,24 +202,49 @@ def roll_function():
     players[current_player_name.get()] += zusammengezaehlt
 
     if players[current_player_name.get()] > point_barrier:
-        lost = True
+        current_player = current_player_name.get()
         players_final_score[current_player_name.get()] = -1
-        players.pop(current_player_name.get())
+        players[current_player] = -1
+        root.after(1500, next_player)
     else:
-        lost = False
+        root.after(1500, next_player)
 
-    if lost:
-        alert(f"geworfen: {roll_value} ", 5000)
-    else:
-        alert(f"Deine aktuellen Punkte: {players[current_player_name]}", 5000)
-    root.after(3000, next_player)
 
 def pass_function():
-    pass
+    global index, players, players_final_score, roll_button, pass_button
+    current_player = current_player_name.get()
+    if roll_button or pass_button:
+        roll_button.config(state=tk.DISABLED)
+        pass_button.config(state=tk.DISABLED)
+    players_final_score[current_player] = players[current_player]
+    players[current_player] = -1
+    root.after(2000, next_player)
+
+
+
+
 
 
 def next_player():
-    pass
+    global index, players, roll_button, pass_button, roll_value
+
+    player_names = list(players.keys())
+    num_players = len(player_names)
+
+    while True:
+
+        index = (index + 1) % num_players
+
+        current_name = player_names[index]
+
+        if players[current_name] >= 0:
+            break
+    if roll_button and pass_button:
+        roll_button.config(state=tk.NORMAL)
+        pass_button.config(state=tk.NORMAL)
+        roll_value.set("")
+    update_ui()
+
 
 
 
