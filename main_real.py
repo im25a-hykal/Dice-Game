@@ -161,8 +161,13 @@ def update_scoreboard():
     #auflistung der namen
     for name in players:
         score = players[name]
-        score_text = str(score)
-        tk.Label(score_widgets_frame, text=f"{name}: {score_text}").pack(anchor='w', padx=10, pady=2)
+        if score == -1:
+            score = players_final_score[name]
+            score_text = str(score)
+            tk.Label(score_widgets_frame, text=f"{name}: {score_text}", fg="red").pack(anchor='w', padx=10, pady=2)
+        else:
+            score_text = str(score)
+            tk.Label(score_widgets_frame, text=f"{name}: {score_text}").pack(anchor='w', padx=10, pady=2)
 
 
 def alert(message, duration_ms=5000):
